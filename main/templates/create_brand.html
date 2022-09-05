@@ -1,0 +1,9 @@
+{% extends 'sidebar.html' %}
+{% block content %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+<form enctype="multipart/form-data" method="post">
+{% csrf_token %}{% crispy brand_form %}
+<button type="submit">Add to list</button>
+</form>
+{% endblock %}

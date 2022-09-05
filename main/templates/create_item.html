@@ -1,0 +1,8 @@
+{% extends 'sidebar.html' %}
+{% block content %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+<form action="." enctype="multipart/form-data" method="post">
+{% csrf_token %}{% crispy item_form %}{% crispy pic_form %}
+</form>
+{% endblock %}

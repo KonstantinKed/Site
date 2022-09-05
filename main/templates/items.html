@@ -1,0 +1,40 @@
+{% extends 'sidebar.html' %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+<form action="" enctype="multipart/form-data" method="post">
+{% csrf_token %}{% crispy apt_form %}
+</form>
+
+</form>
+<hr>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-6 g-3 row-cols-lg-12">
+{%for item in items %}
+        <div class="col">
+          <div class="card shadow-sm">
+              <div style="height: 200px; text-align: center;">
+                  <img style="max-height: 90%" src="{{ item.get_first_image.img.url }}">
+              </div>
+            <div class="card-body">
+              <p class="card-text">
+                <div style="font-size: 0.9rem">
+                <p>{{ item.name }} {{ item.brand }}<br>
+                {{ item.apt }} <br> {{ item.cond }}</p>
+                </div>
+              </p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <a href="/view_item/{{ item.id }}" type="button" class="btn btn-sm btn-outline-secondary">View</a>
+                  <a href="/update_item/{{ item.id }}" type="button" class="btn btn-sm btn-outline-secondary">Edit</a>
+                  <a href="/update_item/{{ item.id }}/delete" class="btn btn-sm btn-outline-secondary">Remove</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+<!--<img src="{{ pic.img.url }}" width="500">-->
+{% endfor %}
+</div>
+{% endblock %}

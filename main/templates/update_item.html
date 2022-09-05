@@ -1,0 +1,24 @@
+{% extends 'sidebar.html' %}
+{% block content %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+<form method="post">
+{% csrf_token %}{% crispy form %}
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
+{% for pic in pics %}
+        <div class="col">
+          <div class="card shadow-sm">
+              <div style="height: 200px; text-align: center;">
+<!--                  {% for image in instance.get_images %}-->
+                  <img style="max-height: 90%" src="{{ pic.img.url }}">
+              </div>
+
+          </div>
+            {% endfor %}
+        </div>
+</div>
+<!--{% endfor %}-->
+</form>
+{% endblock %}
+
+

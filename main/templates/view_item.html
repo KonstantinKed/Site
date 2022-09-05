@@ -1,0 +1,49 @@
+{% extends 'sidebar.html' %}
+
+{% block content %}
+
+<div class="col">
+    <div class="card">
+        <div class="row g-0">
+            <div class="col-md-6">
+                <div class="card-body">
+                    <h5 class="card-title">{{instance.name}} {{instance.brand}}</h5>
+                    <p class="card-text">
+                      <table class="table">
+                        <tr>
+                            <td>Місце знаходження:</td><td>{{instance.apt}}</td>
+                        </tr>
+                        <tr>
+                            <td>Кімната: </td><td>{{instance.loc}}</td>
+                        </tr>
+                        <tr>
+                            <td>Стан:</td><td>{{instance.cond}}</td>
+                        </tr>
+                        <tr>
+                            <td>Тип:</td><td>{{instance.type}}</td>
+                        </tr>
+                        <tr>
+                            <td>Підключення:</td><td>{{instance.conn}}</td>
+                        </tr>
+                        <tr>
+                            <td>Коментар:</td><td>{{instance.cond}}</td>
+                        </tr>
+                      </table>
+                    </p>
+                    <p class="card-text"><small class="text-muted">{{instance.input_date}}</small></p>
+                </div>
+            </div>
+            {% for pic in pics %}
+                <div class="col-md-6" >
+                    <div style="height: 300px; text-align: left;">
+                    <img style="max-height: 90%" src="{{ pic.img.url }}">
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
