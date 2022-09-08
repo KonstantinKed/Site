@@ -1,0 +1,16 @@
+{% extends 'sidebar.html' %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+{% block content %}
+<div class="text-center">
+<img class="mb-4" src="/static/assets/logo_sign.jpg" alt="" width="200" height="80">
+  <h1 class="h3 mb-3 fw-normal">Please sign in</h1></div>
+<div class="container">
+  <form method="post">
+    {% csrf_token %}
+    {{form|crispy}}
+    <p> Have an account! Login <a href="/login">Here</a>!</p>
+    <button type="submit" class="btn btn-success">Register</button>
+  </form>
+</div>
+{% endblock %}

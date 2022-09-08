@@ -1,0 +1,17 @@
+{% extends 'sidebar.html' %}
+{% block content %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+<form action="" enctype="multipart/form-data" method="post">
+{% csrf_token %}{% crispy apt_form %}
+</form>
+
+
+
+    <ol>
+        {%for item in items %}
+        <li>{{item.name}} {{item.brand}} - 1</li>
+        {% endfor %}
+    </ol>
+
+{% endblock %}
