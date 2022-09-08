@@ -6,11 +6,9 @@
 {% csrf_token %}{% crispy apt_form %}
 </form>
 
-
-
     <ol>
-        {%for item in items %}
-        <li>{{item.name}} {{item.brand}} - 1</li>
+        {%for key, value in inventories.items %}
+        <li>{{ value.name }} - {{ value.count }}</li>
         {% endfor %}
     </ol>
 

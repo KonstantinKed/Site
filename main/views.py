@@ -8,6 +8,8 @@ from docx import Document
 from docx.shared import Inches
 
 # Create your views here.
+from .utils import items_calc
+
 
 def index(request):
     return render(request, 'index.html')
@@ -131,7 +133,13 @@ def collect_list(request):
                 apt=apt_form.cleaned_data['apt'])
     else:
         apt_form = ApartmentSelectForm()
-    context = {'items': items, 'apt_form': apt_form}
+
+    inventories = items_calc(items)
+
+
+
+
+    context = {'items': items, 'apt_form': apt_form, 'inventories': inventories}
     return render(request, 'collect_list.html', context=context)
 
 

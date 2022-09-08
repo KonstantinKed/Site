@@ -185,6 +185,7 @@ class DjangoSession(models.Model):
         db_table = 'django_session'
 
 
+
 class Inventory(models.Model):
     invent_id = models.CharField(default=0, max_length=12)
     name = models.ForeignKey('Names', models.DO_NOTHING, blank=True, null=True)
@@ -196,6 +197,10 @@ class Inventory(models.Model):
     cond = models.ForeignKey(Condition, models.DO_NOTHING, blank=True, null=True)
     input_date = models.DateField()
     comments = models.CharField(max_length=255, blank=True, null=True)
+
+    @property
+    def generate_invent_id(self):
+        return 'PHR-{0:07d}'.format(self.pk)
 
     @property
     def get_images(self):
