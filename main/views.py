@@ -143,26 +143,24 @@ def collect_list(request):
     else:
         apt_form = ApartmentSelectForm()
     inventories = items_calc(items) # function code is in utils file
-    # request.session['inv'] = inventories
+    print(inventories)
+    request.session['inventories'] = inventories
     context = {'items': items, 'apt_form': apt_form, 'inventories': inventories}
 
     return render(request, 'collect_list.html', context=context)
 
 def generate_docx(request):
-    items = Inventory.objects.all()
-    # inventories = request.session['inv']
-    inventories = items_calc(items)
+    inventories = request.session.get('inventories')
+
     document = Document()
 
     document.add_heading('Акт прийому-передачі Помешкання ', 0)
 
     document.add_paragraph('В  Помешканні знаходиться наступне Майно: ')
     for v in inventories.values():
-        print(v)
         document.add_paragraph(
         str(v['name']) + '-' + str(v['count']), style='List Number'
         )
-
     # document.add_picture('monty-truth.png', width=Inches(1.25))
     #
     # records = (
