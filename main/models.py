@@ -6,7 +6,13 @@
 #   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
+
 from django.db import models
+import sys
+from PIL import Image
+from io import BytesIO
+from django.core.files import File
+from django import forms
 # from django.contrib.auth.models import User
 
 
@@ -187,17 +193,18 @@ class DjangoSession(models.Model):
 
 
 class Inventory(models.Model):
+    name = models.ForeignKey('Names', models.DO_NOTHING, blank=True, null=True, verbose_name='Назва')
+    brand = models.ForeignKey(Brands, models.DO_NOTHING, blank=True, null=True, verbose_name='Бренд')
+    apt = models.ForeignKey(Apartments, models.DO_NOTHING, blank=True, null=True, verbose_name='Квартира №')
+    loc = models.ForeignKey('Location', models.DO_NOTHING, blank=True, null=True, verbose_name='Розташування')
+    type = models.ForeignKey('Type', models.DO_NOTHING, blank=True, null=True, verbose_name='Категорія')
+    conn = models.ForeignKey(Connection, models.DO_NOTHING, blank=True, null=True, verbose_name='Встановлення')
+    cond = models.ForeignKey(Condition, models.DO_NOTHING, blank=True, null=True, verbose_name='Стан')
+    input_date = models.DateField(verbose_name='Дата придбання')
+    comments = models.CharField(max_length=255, blank=True, null=True, verbose_name='Коментар')
     invent_id = models.CharField(default=0, max_length=12)
-    name = models.ForeignKey('Names', models.DO_NOTHING, blank=True, null=True)
-    brand = models.ForeignKey(Brands, models.DO_NOTHING, blank=True, null=True)
-    apt = models.ForeignKey(Apartments, models.DO_NOTHING, blank=True, null=True)
-    loc = models.ForeignKey('Location', models.DO_NOTHING, blank=True, null=True)
-    type = models.ForeignKey('Type', models.DO_NOTHING, blank=True, null=True)
-    conn = models.ForeignKey(Connection, models.DO_NOTHING, blank=True, null=True)
-    cond = models.ForeignKey(Condition, models.DO_NOTHING, blank=True, null=True)
-    input_date = models.DateField()
-    comments = models.CharField(max_length=255, blank=True, null=True)
 
+# generating invent id according to certain template
     @property
     def generate_invent_id(self):
         return 'PHR-{0:07d}'.format(self.pk)
@@ -225,14 +232,34 @@ class Inventory(models.Model):
         verbose_name = 'Інвентаризація'
         ordering = ['invent_id']
 
+
 class Pics(models.Model):
     id = models.AutoField(primary_key=True)
     pics_link = models.BinaryField(null=True)
     img = models.ImageField(upload_to='pics/')
-    invent = models.ForeignKey(Inventory, models.DO_NOTHING, related_name='images', db_column='invent')
+    invent = models.ForeignKey(Inventory, models.DO_NOTHING, related_name='images', db_column='invent', verbose_name='Фото')
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.img = self.compressImage(self.img)
+        super(Pics, self).save(*args, **kwargs)
+
+    def compressImage(self, img):
+        image = Image.open(img).convert("RGB")
+        im_io = BytesIO()
+
+        if img.name.split('.')[1] == 'jpeg' or img.name.split('.')[1] == 'jpg':
+            image.save(im_io, format='jpeg', optimize=True, quality=55)
+            new_image = File(im_io, name="%s.jpeg" % img.name.split('.')[0], )
+        else:
+            image.save(im_io, format='png', optimize=True, quality=55)
+            new_image = File(im_io, name="%s.png" % img.name.split('.')[0], )
+
+        return new_image
 
     def __str__ (self):
         return self.img
+
 
     class Meta:
         managed = True

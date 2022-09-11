@@ -39,7 +39,9 @@
             {% for pic in pics %}
                 <div class="col-md-6" >
                     <div style="height: 300px; text-align: left;">
-                    <img style="max-height: 90%" src="{{ pic.img.url }}">
+                        <a href="{{pic.img.url}}" >
+                        <img style="max-height: 90%" src="{{ pic.img.url }}">
+                        </a>
                     </div>
                 </div>
             {% endfor %}

@@ -6,9 +6,10 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.db.models import OuterRef, Subquery, Count, Min
 from docx import Document
 from docx.shared import Inches
+from django.core.paginator import Paginator
+from .utils import items_calc
 
 # Create your views here.
-from .utils import items_calc
 
 
 def index(request):
@@ -30,7 +31,12 @@ def items(request):
             items = Inventory.objects.filter(apt=apt_form.cleaned_data['apt'])  # selecting items according to selected apartment
     else:
         apt_form = ApartmentSelectForm()
-    context = {'items': items, 'apt_form': apt_form}
+
+    p = Paginator(items, 4)
+    page = request.GET.get('page')
+    items_p = p.get_page(page)
+    page_num = "x" * items_p.paginator.num_pages
+    context = {'items': items, 'items_p': items_p, 'apt_form': apt_form, 'page_num': page_num}
     return render(request, 'items.html', context=context)
 
 @login_required(login_url='/login')
@@ -41,7 +47,8 @@ def create_item(request):
         if item_form.is_valid():
             item = item_form.save()
             uploaded_img = pic_form.save(commit=False)
-            for img in request.FILES.getlist('images'):
+            imgs = request.FILES.getlist('images')
+            for img in imgs:
                 Pics.objects.create(img=img, invent=item)
                 # pic_form.cleaned_data['img']
                 # uploaded_img.img = img
@@ -101,7 +108,10 @@ def update_item(request, id):
 @login_required(login_url='/login')
 def delete_item(request, id):
     instance = get_object_or_404(Inventory, id=id)
+    pic_del = Pics.objects.filter(invent=id)
+    pic_del.delete()
     instance.delete()
+
     return HttpResponseRedirect('/items')
 
 
@@ -114,10 +124,9 @@ def upload_pics(request):
             uploaded_img = form.save(commit=False)
             uploaded_img.image_data = form.cleaned_data['img'].file.read()
             invent = Inventory.objects.filter(invent_id = form.cleaned_data['invent_id']).first()
-            # invent = get_object_or_404(Inventory, invent_id=form.cleaned_data['invent_id'])
             uploaded_img.invent_id = invent
             uploaded_img.save()
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/items')
     else:
         form = UploadPicsForm()
     return render(request, 'upload_pics.html', {'form': form})
@@ -133,30 +142,21 @@ def collect_list(request):
                 apt=apt_form.cleaned_data['apt'])
     else:
         apt_form = ApartmentSelectForm()
-    inventories = items_calc(items) # function code is in utils fyle
+    inventories = items_calc(items) # function code is in utils file
+    # request.session['inv'] = inventories
     context = {'items': items, 'apt_form': apt_form, 'inventories': inventories}
 
     return render(request, 'collect_list.html', context=context)
 
 def generate_docx(request):
-
     items = Inventory.objects.all()
+    # inventories = request.session['inv']
     inventories = items_calc(items)
     document = Document()
 
-    document.add_heading('Акт прийому-передачі Помешкання', 0)
+    document.add_heading('Акт прийому-передачі Помешкання ', 0)
 
-    p = document.add_paragraph('В  Помешканні знаходсяться наступне Майно: ')
-    # p.add_run('bold').bold = True
-    # p.add_run(' and some ')
-    # p.add_run('italic.').italic = True
-
-    # document.add_heading('Heading, level 1', level=1)
-    # document.add_paragraph('Intense quote', style='Intense Quote')
-    #
-    # document.add_paragraph(
-    #     'first item in unordered list', style='List Bullet'
-    # )
+    document.add_paragraph('В  Помешканні знаходиться наступне Майно: ')
     for v in inventories.values():
         print(v)
         document.add_paragraph(

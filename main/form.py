@@ -22,15 +22,12 @@ class CreateItemForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_tag = False
-        # self.helper.add_input(Submit('submit', 'Submit'))
+        # self.helper.add_input(Submit('submit', 'Submit'))  # button from upload image form works for both forms!!!
 
 
 class UploadPicsForm(forms.ModelForm):
-    images = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
+    images = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True, 'name': 'Фото'}))
 
-    # iquery = Inventory.objects.values_list('invent_id', flat=True).distinct()
-    # iquery_choices = [('', 'None')] + [(id, id) for id in iquery]
-    # invent_id = forms.ChoiceField(choices = iquery_choices, required=False, widget=forms.Select())
     class Meta:
         model = Pics
         fields = ['images']

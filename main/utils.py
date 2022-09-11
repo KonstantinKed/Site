@@ -6,7 +6,7 @@ from main.models import Inventory
 def items_calc(items: List[Inventory]) -> dict:
     inventories = {}
     for item in items:
-        if not item.name in inventories:
+        if item.name not in inventories:
             inventories[item.name] = {"name": item.name, "count": 1}
         else:
             inventories[item.name]["count"] += 1

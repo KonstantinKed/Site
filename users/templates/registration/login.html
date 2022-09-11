@@ -2,18 +2,32 @@
 {% load crispy_forms_tags %}
 {% load crispy_forms_filters %}
 {% block content %}
-
-<div class="text-center">
-<main class="form-signin w-100 m-auto">
-<img class="mb-4" src="/static/assets/logo_sign.jpg" alt="" width="200" height="80">
-<form method="post">
+<div class="container text-center">
+  <div class="row justify-content-md-center">
+    <div class="col col-lg-2">
+    </div>
+    <div class="col-md-auto">
+      <img class="mb-4" src="/static/assets/logo_sign.jpg" alt="" width="200" height="80">
+    </div>
+    <div class="col col-lg-2">
+    </div>
+  </div>
+  <div class="row justify-content-md-center">
+    <div class="col col-lg-2">
+    </div>
+    <div class="col-md-auto">
+        <form method="post">
         {% csrf_token %}
         {{form|crispy}}
-        <p> Don't have an account? Create one <a href="/sign_up">Here</a></p>
-        <button type="submit" class="btn btn-success">Login</button>
-    </form>
-    <p class="mt-5 mb-3 text-muted">2022 awful year</p>
-</main>
+        </form>
+    </div>
+    <div class="col col-lg-2">
+    </div>
+  </div>
+        <p> Don't have an account? Create one <a href="/sign_up">here</a></p>
+        <button type="submit" class="btn btn-outline-dark">Login</button>
+    <div class="col-md-auto">
+        <p class="mt-5 mb-3 text-muted">2014-2022(awful year)</p>
+    </div>
 </div>
-
 {% endblock %}

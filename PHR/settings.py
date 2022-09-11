@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',  # implements separation access of control subsystem
     'django.contrib.contenttypes',
-    'django.contrib.sessions',   # subsystem, serving servers sessions
+    'django.contrib.sessions',   # subsystem, serving servers sessions, added the option of file based sessions
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.postgres',  # additional tools to cooperate with postgreSQL
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'users',
     # 'python-docx',
 ]
+
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
@@ -152,3 +153,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/items'
 LOGOUT_REDIRECT_URL = '/'
+
